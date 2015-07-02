@@ -18,11 +18,12 @@ from django.contrib import admin
 import login.views as lv
 import home.views as hv
 
-# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ for deploy
+# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
+    url(r'^challenge/', include('challenge.urls',namespace='challenge')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}, name = 'signin'),
     url(r'^home/$', lv.home),
@@ -32,4 +33,5 @@ urlpatterns = [
     url('^$', hv.home, name = 'home'),
 ] 
 
+# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
 urlpatterns += staticfiles_urlpatterns()
