@@ -19,6 +19,7 @@ from login.views import home, logout_page, register, register_success
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^challenge/', include('challenge.urls',namespace='challenge')),
     url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}),
     url(r'^home/$', home),
     url(r'^logout/$', logout_page),
