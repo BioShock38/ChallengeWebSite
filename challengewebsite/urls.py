@@ -15,13 +15,21 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from login.views import home, logout_page, register, register_success
+import login.views as lv
+import home.views as hv
+
+# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ for deploy
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}),
-    url(r'^home/$', home),
-    url(r'^logout/$', logout_page),
-    url(r'^register/$', register),
-    url(r'^register/success/$', register_success),
-]
+    url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}, name = 'signin'),
+    url(r'^home/$', lv.home),
+    url(r'^logout/$', lv.logout_page, name = 'signout'),
+    url(r'^register/$', lv.register, name = 'signup'),
+    url(r'^register/success/$', lv.register_success),
+    url('^$', hv.home, name = 'home'),
+] 
+
+urlpatterns += staticfiles_urlpatterns()
