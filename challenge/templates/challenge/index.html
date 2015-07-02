@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h1> Challenge </h1>
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
@@ -18,3 +22,6 @@
 </form>
 
 {% if res %}<p><strong>{{res}}</strong></p>{% endif %}
+
+{% endblock content %}
+
