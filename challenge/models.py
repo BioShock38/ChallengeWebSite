@@ -2,6 +2,13 @@ from django.db import models
 from django.conf import settings
 
 # Create your models here.
+class Challenge(models.Model):
+    name = models.CharField(max_length=200,unique=True)
+    desc = models.TextField()
+    rules = models.TextField()
+    evaluation = models.TextField()
+    lsimu = models.ManyToManyField('Simulation')
+    
 class Simulation(models.Model):
     name = models.CharField(max_length=200,unique=True)
     numero = models.IntegerField(unique=True)

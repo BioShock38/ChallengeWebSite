@@ -2,26 +2,17 @@
 
 {% block content %}
 
-<h1> Challenge </h1>
+<div id="content">
+
+<h1> Challenges </h1>
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-<form action="{% url 'challenge:index' %}" method="post">
-{% csrf_token %}
-<div class="fieldWrapper">
-{{ form.select_simu.errors }}
-<label for="{{ form.select_simu.id_for_label }}"> Simulations:</label>
-{{ form.select_simu }}
-</div>
-<div class="fieldWrapper">
-{{ form.answer.errors }}
-<label for="{{ form.answer.id_for_label }}"> Your Answer:</label>
-{{ form.answer }}
-</div>
-<input type="submit" value="Submit" />
-</form>
+<ul id="menu_challenges">
+{% for challenge in lchallenges %}
+<li><a href="{% url 'challenge:desc' challenge.id %}">{{challenge.name}}</a></li>
+{% endfor %} 
+</ul>
 
-{% if res %}<p><strong>{{res}}</strong></p>{% endif %}
-
+</div>
 {% endblock content %}
-
