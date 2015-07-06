@@ -2,22 +2,42 @@ from django.shortcuts import render
 from django.http import Http404
 from django.http import HttpResponse
 
-from .models import Simulation, Submission, Result
+from .models import Challenge, Simulation, Submission, Result
 from .forms import SubmitForm
 
 import difflib
 
 # Create your views here.
 def index(request):
+    l_challenges = Challenge.objects.all()
+    context = {'lchallenges': l_challenges}
+    return render(request, 'challenge/index.html', context)
+
+def desc(request,challenge_id):
+    challenge = Challenge.objects.get(id=challenge_id)
+    context = {'challenge': challenge}
+    return render(request, 'challenge/desc.html', context)
+
+def rules(request,challenge_id):
+    challenge = Challenge.objects.get(id=challenge_id)
+    context = {'challenge': challenge}
+    return render(request, 'challenge/rules.html', context)
+
+def evaluation(request,challenge_id):
+    challenge = Challenge.objects.get(id=challenge_id)
+    context = {'challenge': challenge}
+    return render(request, 'challenge/evaluation.html', context)
+          
+def challenge_submit(request,challenge_id):
 
     # render the template with the error
     def render_error(msg_error):
-        return render(request, 'challenge/index.html',
+        return render(request, 'challenge/submit.html',
                       {'l_simu': l_simu,
                        'form': form,
                        'error_message': msg_error})
 
-    l_simu = Simulation.objects.all()
+    l_simu = Simulation.objects.filter(challenge__id=challenge_id)
 
     if request.method == 'POST':
         form = SubmitForm(request.POST,l_simu = l_simu)
@@ -41,7 +61,7 @@ def index(request):
 
             r = Result.objects.create(submission=s,f1score=sm.ratio())
 
-            return render(request, 'challenge/index.html',
+            return render(request, 'challenge/submit.html',
                           {'l_simu' : l_simu,
                            'form': form,
                            'res': r.f1score})
@@ -52,6 +72,6 @@ def index(request):
         form = SubmitForm(l_simu = l_simu)
     
     context = {'l_simu': l_simu, 'form': form}
-    return render(request, 'challenge/index.html', context)
+    return render(request, 'challenge/submit.html', context)
 
     
