@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% include "challenge/nav.html" with challenge_id=challenge.id %}
+
 <div id="content">
 
 <h1> Challenge </h1>

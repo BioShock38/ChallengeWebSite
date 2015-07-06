@@ -35,8 +35,10 @@ def challenge_submit(request,challenge_id):
         return render(request, 'challenge/submit.html',
                       {'l_simu': l_simu,
                        'form': form,
+                       'challenge': challenge,
                        'error_message': msg_error})
 
+    challenge = Challenge.objects.get(id=challenge_id)
     l_simu = Simulation.objects.filter(challenge__id=challenge_id)
 
     if request.method == 'POST':
@@ -64,6 +66,7 @@ def challenge_submit(request,challenge_id):
             return render(request, 'challenge/submit.html',
                           {'l_simu' : l_simu,
                            'form': form,
+                           'challenge': challenge,
                            'res': r.f1score})
         else:
             render_error("Invalid Form")
@@ -71,7 +74,7 @@ def challenge_submit(request,challenge_id):
     else:
         form = SubmitForm(l_simu = l_simu)
     
-    context = {'l_simu': l_simu, 'form': form}
+    context = {'l_simu': l_simu, 'form': form, 'challenge':challenge}
     return render(request, 'challenge/submit.html', context)
 
     
