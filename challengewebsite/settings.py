@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'login',
     'challenge',
+    'home',
 )
 
 MIDDLEWARE_CLASSES = (
