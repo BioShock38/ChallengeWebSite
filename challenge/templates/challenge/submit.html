@@ -27,6 +27,11 @@
 <label for="{{ form.level.id_for_label }}"> Your Level:</label>
 {{ form.level }}
 </div>
+<div class="fieldWrapper">
+{{ form.software.errors }}
+<label for="{{ form.software.id_for_label }}"> Your Software:</label>
+{{ form.software }}
+</div>
 <input type="submit" value="Submit" />
 </form>
 

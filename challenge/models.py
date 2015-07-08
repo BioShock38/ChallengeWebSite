@@ -46,7 +46,13 @@ class Submission(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
-    methods = models.CharField(max_length=100,
+    SOFTWARE_CHOICES = [
+        ("0", 'CeluiQuiEstRandom'),
+        ("1", 'CeluiQuiMarcheJamais'),
+        ("2", 'DEEPLEARNING'),
+        ("3", 'Other')
+        ]
+    methods = models.CharField(max_length=200,
                                default = 'Random')
 
     def __str__(self):

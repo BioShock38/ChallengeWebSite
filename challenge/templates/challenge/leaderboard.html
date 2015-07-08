@@ -7,5 +7,97 @@
 <div id="content">
 <p>TODO</p>
 </div>
+<div id="graph"></div>
+
+<style>
+div.tooltip {   
+  position: absolute;           
+  text-align: center;           
+  width: 100px;                  
+  height: 50px;                 
+  padding: 2px;             
+  font: 12px sans-serif;        
+  background: lightsteelblue;   
+  border: 0px;      
+  border-radius: 8px;           
+  pointer-events: none;         
+}
+</style>
+
+<script src="http://d3js.org/d3.v3.js"></script>
+<script>
+var margin = {top: 20, right: 20, bottom: 30, left:50},
+    width = 500 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+var formatDate = d3.time.format("%a : %X");
+
+var x = d3.scale.linear()
+          .range([0,width]);
+
+var svg = d3.select("#graph").append("svg") 
+            .attr("width", width + margin.left + margin.right)
+            .attr("height",height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left +"," + margin.top +")");
+var final_data;
+d3.json("{% url 'challenge:results_challenge' challenge.id%}", function(error,data) {
+
+data.forEach(function(d) {
+   d.date = parseDate(d.submission__date);
+   d.f1score = +d.f1score;
+   d.user = d.submission__user__username;
+   d.simu = d.submission__simu__name;
+   d.method = d.submission__methods;
+});
+
+var data = d3.nest()
+  .key(function(d) {return d.submission__methods})
+  .entries(data);
+
+data.forEach(function(d) {
+   d.method = d.key;
+});
+final_data = data;
+x.domain([0,1]);
+
+data.forEach(function(data,i) {
+var points = svg.selectAll("circle")
+   .data(data.values)
+   .enter()
+   .append("circle")
+
+var pointsAttributes = points
+   .attr("cx", function(d) {return x(d.f1score)})
+   .attr("cy", i*30)
+   .attr("r", 10)
+   .style("fill", "red");
+
+var points = points
+   .append("title")
+   .text(function(d) {return d.user});
+
+var tooltip = d3.select("#graph").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+pointsAttributes.on("mouseover", function(d) {      
+            tooltip.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+            tooltip.html(formatDate(d.date) + "<br/>"  + d.user + "<br/> score :" + d.f1score.toFixed(4))  
+                .style("left", (d3.event.pageX) + "px")     
+                .style("top", (d3.event.pageY - 28) + "px");    
+            })                  
+        .on("mouseout", function(d) {       
+            tooltip.transition()        
+                .duration(500)      
+                .style("opacity", 0);   
+            });
+});
+});
+
+</script>
 
 {% endblock content %}

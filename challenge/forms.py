@@ -1,5 +1,6 @@
 from django import forms
 from .models import Submission, Simulation
+from .choicewithother import OptionalChoiceField
 
 class SubmitForm(forms.Form):
 
@@ -12,5 +13,6 @@ class SubmitForm(forms.Form):
     answer = forms.CharField(max_length=400)
     level = forms.ChoiceField(widget=forms.Select,
                               choices=Submission.LEVEL_CHOICES)
+    software = OptionalChoiceField(choices=Submission.SOFTWARE_CHOICES)
 
     
