@@ -22,6 +22,11 @@
 <label for="{{ form.answer.id_for_label }}"> Your Answer:</label>
 {{ form.answer }}
 </div>
+<div class="fieldWrapper">
+{{ form.level.errors }}
+<label for="{{ form.level.id_for_label }}"> Your Level:</label>
+{{ form.level }}
+</div>
 <input type="submit" value="Submit" />
 </form>
 

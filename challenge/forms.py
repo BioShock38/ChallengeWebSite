@@ -1,5 +1,5 @@
 from django import forms
-from .models import Simulation
+from .models import Submission, Simulation
 
 class SubmitForm(forms.Form):
 
@@ -10,5 +10,7 @@ class SubmitForm(forms.Form):
                                                        choices=[(simu.name,simu.name) for simu in l_simu])
 
     answer = forms.CharField(max_length=400)
+    level = forms.ChoiceField(widget=forms.Select,
+                              choices=Submission.LEVEL_CHOICES)
 
     
