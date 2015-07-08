@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.utils import timezone
 
 from .models import Challenge, Simulation, Submission, Result
 from .forms import SubmitForm
@@ -27,6 +29,18 @@ def evaluation(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
     context = {'challenge': challenge}
     return render(request, 'challenge/evaluation.html', context)
+
+def leaderboard(request,challenge_id):
+    challenge = Challenge.objects.get(id=challenge_id)
+    context = {'challenge': challenge}
+    return render(request, 'challenge/leaderboard.html', context)
+
+def results_challenge(request,challenge_id):
+    challenge = Challenge.objects.get(id=challenge_id)
+    l_results = Result.objects.filter(submission__challenge=challenge) \
+                              .values('f1score','submission__date','submission__user','submission__simu') 
+    return JsonResponse(list(l_results),safe=False)
+
           
 def challenge_submit(request,challenge_id):
 
@@ -51,7 +65,9 @@ def challenge_submit(request,challenge_id):
                 render_error("Wrong selected simulation")
 
             s = Submission.objects.create(simu=selected_simu,
+                                          challenge=challenge,
                                           answer=request.POST['answer'],
+                                          date=timezone.now(),
                                           user=request.user)
 
             parsed_answer = s.parse_answer()
@@ -63,7 +79,13 @@ def challenge_submit(request,challenge_id):
 
             r = Result.objects.create(submission=s,f1score=sm.ratio())
 
-            return render(request, 'challenge/submit.html',
+            if selected_simu.private:
+                return render(request, 'challenge/submit.html',
+                          {'l_simu' : l_simu,
+                           'form': form,
+                           'challenge': challenge})
+            else :
+            	return render(request, 'challenge/submit.html',
                           {'l_simu' : l_simu,
                            'form': form,
                            'challenge': challenge,

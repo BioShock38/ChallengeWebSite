@@ -17,7 +17,7 @@ def register(request):
             password=form.cleaned_data['password1'],
             email=form.cleaned_data['email']
             )
-            return HttpResponseRedirect('/register/success/')
+            return HttpResponseRedirect('/login/register/success/')
     else:
         form = RegistrationForm()
     variables = RequestContext(request, {
@@ -36,7 +36,7 @@ def register_success(request):
  
 def logout_page(request):
     logout(request)
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/')
  
 @login_required
 def home(request):
