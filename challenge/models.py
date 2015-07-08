@@ -8,11 +8,16 @@ class Challenge(models.Model):
     rules = models.TextField()
     evaluation = models.TextField()
     lsimu = models.ManyToManyField('Simulation')
+    isover = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
     
 class Simulation(models.Model):
     name = models.CharField(max_length=200,unique=True)
     numero = models.IntegerField(unique=True)
     truth = models.CharField(max_length=400)
+    private = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -22,7 +27,9 @@ class Simulation(models.Model):
 
 class Submission(models.Model):
     simu = models.ForeignKey(Simulation)
+    challenge = models.ForeignKey(Challenge)
     answer = models.CharField(max_length=400)
+    date = models.DateTimeField(auto_now_add=True,blank=True)
 
     BEGINNER = 'BEG'
     ADVANCE = 'ADV'
@@ -43,7 +50,7 @@ class Submission(models.Model):
                                default = 'Random')
 
     def __str__(self):
-        return self.answer
+        return "id={id}, date={date}, user={user}".format(id=self.id,date=self.date,user=self.user)
 
     def parse_answer(self,delimiter=','):
         return map(int,self.answer.split(delimiter))
@@ -53,4 +60,4 @@ class Result(models.Model):
     f1score = models.FloatField(verbose_name="F1 Score")
 
     def __str__(self):
-        return str(self.f1score)
+        return "{id} : {score}".format(id=self.id,score=self.f1score)

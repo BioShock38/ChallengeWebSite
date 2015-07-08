@@ -10,7 +10,7 @@
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-<form action="{% url 'challenge:index' %}" method="post">
+<form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
 <div class="fieldWrapper">
 {{ form.select_simu.errors }}
