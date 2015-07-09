@@ -87,7 +87,11 @@ def challenge_submit(request,challenge_id):
                                           methods=software,
                                           user=request.user)
 
-            parsed_answer = s.parse_answer()
+            try:
+                parsed_answer = s.parse_answer()
+            except:
+                render_error("You must format your answer. For example : '1,2,3'")
+                
             parsed_truth = selected_simu.parse_truth()
 
             # TODO : Real F1 score
