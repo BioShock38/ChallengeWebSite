@@ -52,7 +52,10 @@ def register(request, template_name):
                       [new_user.email])
             
 
-            return HttpResponseRedirect('/login/register/success/')
+            return render_to_response(
+                'login/success.html',
+                RequestContext( request, { 'confirm': True } )
+            )
     else:
         form = RegistrationForm()
     variables = RequestContext(request, {
