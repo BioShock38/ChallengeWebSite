@@ -19,13 +19,14 @@ from django.contrib import admin
 
 # TODO: Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
+import home.views as hv
 
 urlpatterns = [
     url(r'^challenge/', include('challenge.urls',namespace='challenge')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', include('login.urls',namespace='login')),
-    url(r'^$', include('home.urls',namespace='home')),
+    url(r'^$', hv.home, name = 'home'),
+    url(r'^home/', include('home.urls',namespace='home')),
 ] 
 
 # TODO: Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
