@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from django.http import Http404
-from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils import timezone
 
@@ -32,7 +30,10 @@ def evaluation(request,challenge_id):
 
 def leaderboard(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
-    context = {'challenge': challenge}
+    if request.user.is_authenticated():
+        context = {'challenge': challenge,"userid": request.user.id}
+    else:
+        context = {'challenge': challenge}
     return render(request, 'challenge/leaderboard.html', context)
 
 def results_challenge(request,challenge_id):
@@ -41,12 +42,13 @@ def results_challenge(request,challenge_id):
                               .filter(submission__simu__private=False) \
                               .values('f1score','submission__date',
                                       'submission__user__username',
+                                      'submission__user__id',
                                       'submission__simu',
                                       'submission__simu__name',
-                                      'submission__methods') 
+                                      'submission__methods')
     return JsonResponse(list(l_results),safe=False)
 
-          
+
 def challenge_submit(request,challenge_id):
 
     # render the template with the error
@@ -62,6 +64,9 @@ def challenge_submit(request,challenge_id):
 
     if request.method == 'POST':
         form = SubmitForm(request.POST,l_simu = l_simu)
+
+        if not request.user.is_authenticated():
+            render_error("You must be logged in.")
 
         if form.is_valid():
             try:
@@ -109,8 +114,8 @@ def challenge_submit(request,challenge_id):
 
     else:
         form = SubmitForm(l_simu = l_simu)
-    
+
     context = {'l_simu': l_simu, 'form': form, 'challenge':challenge}
     return render(request, 'challenge/submit.html', context)
 
-    
+
