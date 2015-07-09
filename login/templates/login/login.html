@@ -2,16 +2,25 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 <h1>Login</h1>
-    {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-    <form method="post" action=".">{% csrf_token %}
-        <table border="0">
-            <tr><th><label for="id_username">Username:</label></th><td>{{ form.username }}</td></tr>
-            <tr><th><label for="id_password">Password:</label></th><td>{{ form.password }}</td></tr>
-        </table>
-        <input type="submit" value="Login" />
-        <input type="hidden" name="next" value="/" />
-    </form>
-    <a href="/login/register/">Register</a>
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<div class="col-md-5">
+  <form method="post" action=".">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label" for="username">Username:</label>
+      <input class="form-control" type="text" id="username" name="username">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="password">Password:</label>
+      <input class="form-control" type="password" id="password" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+    <input type="hidden" name="next" value="/" />
+    <a href="/login/register/" class="btn btn-link">Register</a>
+  </form>    
+</div>
+
 {% endblock %}

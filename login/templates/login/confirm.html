@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Registration Successful{% endblock %}
+{% block content %}
+{% if has_account %}
+<h1>Your are already login !</h1>
+{% endif %}
+{% if success %}
+<h1> Registration Completed Successfully</h1>
+    Thank you for registering.
+    <a href="/login/login/">Login</a> 
+{% endif %}
+{% endblock %}
