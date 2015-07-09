@@ -4,8 +4,188 @@
 
 {% include "challenge/nav.html" with challenge_id=challenge.id %}
 
+<script>
+  var user_id = {{userid}};
+</script>
+
 <div id="content">
-<p>TODO</p>
+<div id="graph">
+  <h2> Leaderboard Graph </h2>
+<table id="soft_graph">
+</table>
 </div>
+<div id="lead">
+<h2> Leaderboard Table </h2>
+<p> Leaderboard of the best score for one user with one method. </p>
+  <table id="leaderboard" style="width:100%">
+  </table>
+</div>
+</div>
+
+<style>
+div.tooltip {   
+  position: absolute;           
+  text-align: center;           
+  width: 100px;                  
+  height: 50px;                 
+  padding: 2px;             
+  font: 12px sans-serif;        
+  background: lightsteelblue;   
+  border: 0px;      
+  border-radius: 8px;           
+  pointer-events: none;         
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+table#leaderboard tr:nth-child(even) {
+    background-color: #eee;
+}
+table#leaderboard tr:nth-child(odd) {
+    background-color: #fff;
+}
+</style>
+
+<script src="http://d3js.org/d3.v3.js"></script>
+<script>
+var margin = {top: 20, right: 10, bottom: 10, left:40},
+    width = 800 - margin.left - margin.right,
+    height = 50 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+var formatDate = d3.time.format("%a : %X");
+
+var x = d3.scale.linear()
+          .range([0,width]);
+
+var final_data;
+d3.json("{% url 'challenge:results_challenge' challenge.id%}", function(error,data) {
+
+data.forEach(function(d) {
+   d.date = parseDate(d.submission__date);
+   d.f1score = +d.f1score;
+   d.user = d.submission__user__username;
+   d.user_id = d.submission__user__id;
+   d.simu = d.submission__simu__name;
+   d.method = d.submission__methods;
+});
+
+var data = d3.nest()
+  .key(function(d) {return d.submission__methods})
+  .entries(data);
+
+data.forEach(function(d) {
+   d.method = d.key;
+});
+final_data = data;
+x.domain([0,1]);
+
+data.forEach(function(data,i) {
+
+var row = d3.select("#soft_graph").append("tr");
+
+var td_name = row.append("td")
+                 .html(data.key);
+
+var svg = row.append("td").append("svg") 
+            .attr("width", width + margin.left + margin.right)
+            .attr("height",height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left +"," + margin.top +")");
+
+var points = svg.selectAll("circle")
+   .data(data.values)
+   .enter()
+   .append("circle")
+
+var pointsAttributes = points
+   .attr("cx", function(d) {return x(d.f1score)})
+   .attr("cy", 0)
+   .attr("r", 10)
+   .style("fill", function(d) {return (user_id == d.user_id ? "blue" : "red")});
+
+var points = points
+   .append("title")
+   .text(function(d) {return d.user});
+
+var tooltip = d3.select("#graph").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+pointsAttributes.on("mouseover", function(d) {      
+            tooltip.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+            tooltip.html(formatDate(d.date) + "<br/>"  + d.user + "<br/> score :" + d.f1score.toFixed(4))  
+                .style("left", (d3.event.pageX) + "px")     
+                .style("top", (d3.event.pageY - 28) + "px");    
+            })                  
+        .on("mouseout", function(d) {       
+            tooltip.transition()        
+                .duration(500)      
+                .style("opacity", 0);   
+            });
+});
+
+// scale
+var first_row = d3.select("#soft_graph").append("tr");
+var name_td = first_row.append("td");
+name_td.html("F1 Score");
+var scale_td = first_row.append("td");
+var xAxis = d3.svg.axis()
+              .scale(x)
+              .tickValues([0.0,0.2,0.4,0.6,0.8,1.0]);
+var scale_svg = scale_td.append("svg")
+                        .attr("class", "axis")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left +"," + margin.top+")")
+                        .call(xAxis);
+
+});
+
+</script>
+<script>
+d3.json("{% url 'challenge:results_challenge' challenge.id%}", function(error,data) {
+
+data.forEach(function(d) {
+   d.date = parseDate(d.submission__date);
+   d.f1score = +d.f1score;
+   d.user = d.submission__user__username;
+   d.simu = d.submission__simu__name;
+   d.method = d.submission__methods;
+});
+
+function sortByScore(a, b) {
+    return b.values - a.values;
+}
+
+var nestedData = d3.nest().key(function(d) { return d.user + " " + d.method })
+                          .rollup(function(leaves) {
+                              return d3.max(leaves, function(d) {
+                                  return +d.f1score;
+                              });
+                          })
+                          .entries(data);
+
+var sortedNestedData = nestedData.sort(sortByScore);
+
+sortedNestedData.forEach(function(d) {
+
+var row = d3.select("#leaderboard").append("tr");
+
+var td_name = row.append("td")
+                 .html(d.key);
+var td_res = row.append("td")
+                .html(d.values);
+
+});
+
+});
+</script>
 
 {% endblock content %}
