@@ -66,13 +66,13 @@ def challenge_submit(request,challenge_id):
         form = SubmitForm(request.POST,l_simu = l_simu)
 
         if not request.user.is_authenticated():
-            render_error("You must be logged in.")
+            return render_error("You must be logged in.")
 
         if form.is_valid():
             try:
                 selected_simu = Simulation.objects.get(name=request.POST['select_simu'])
             except (KeyError, Simulation.DoesNotExist):
-                render_error("Wrong selected simulation")
+                return render_error("Wrong selected simulation")
 
             (soft,option) = (request.POST['software_0'],request.POST['software_1'])
             if int(soft) < len(Submission.SOFTWARE_CHOICES)-1:
@@ -89,32 +89,33 @@ def challenge_submit(request,challenge_id):
 
             try:
                 parsed_answer = s.parse_answer()
-            except:
-                render_error("You must format your answer. For example : '1,2,3'")
-                
-            parsed_truth = selected_simu.parse_truth()
+            except ValueError:
+                return render_error("You must format your answer. For example : 1,2,3")
+            else:    
+                parsed_truth = selected_simu.parse_truth()
 
-            # TODO : Real F1 score
+                # TODO : Real F1 score
 
-            sm = difflib.SequenceMatcher(None,parsed_answer,parsed_truth)
+                sm = difflib.SequenceMatcher(None,parsed_answer,parsed_truth)
 
-            r = Result.objects.create(submission=s,f1score=sm.ratio())
+                r = Result.objects.create(submission=s,f1score=sm.ratio())
 
-            if selected_simu.private:
-                return render(request, 'challenge/submit.html',
-                          {'l_simu' : l_simu,
-                           'form': form,
-                           'challenge': challenge,
-                           'res': "Submitted !"
-                          })
-            else :
-            	return render(request, 'challenge/submit.html',
-                          {'l_simu' : l_simu,
-                           'form': form,
-                           'challenge': challenge,
-                           'res': str(r.f1score)})
+                if selected_simu.private:
+                    return render(request, 'challenge/submit.html',
+                                  {'l_simu' : l_simu,
+                                   'form': form,
+                                   'challenge': challenge,
+                                   'res': "Submitted !"
+                                  })
+                else :
+                    return render(request, 'challenge/submit.html',
+                                  {'l_simu' : l_simu,
+                                   'form': form,
+                                   'challenge': challenge,
+                                  'res': str(r.f1score)})
+            
         else:
-            render_error("Invalid Form")
+            return render_error("Invalid Form")
 
     else:
         form = SubmitForm(l_simu = l_simu)
