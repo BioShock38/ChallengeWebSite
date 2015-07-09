@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Registration Successful{% endblock %}
 {% block content %}
+{% if confirm %}
+<h1>We just sent you an email to activate your account</h1>
+You can activate your account by following the activation url in this mail.
+{% else %}
 <h1> Registration Completed Successfully</h1>
     Thank you for registering.
     <a href="/login/login/">Login</a> 
+{% endif %}
+
 {% endblock %}
