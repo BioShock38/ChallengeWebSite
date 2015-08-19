@@ -1,43 +1,49 @@
 {% extends 'base.html' %}
-
-{% block content %}
-
-<div class="row cover">
-  {% if request.user.is_authenticated %}
-  {% else %}
-  <div class="col-md-7">
-    <h1>SSMPG summer school</h1>
-    <p class="lead">Welcome to SSMPG summer school challenge website</p>
-  </div>
-  <div class="col-md-5">
-    <h2>Sign up</h2>
-    <form action="." method="post" id="new-account">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <div class="form-group">
-        {{ form.username.errors }}
-        <input class="form-control input-lg" type="text" placeholder="Username" name="username">
+{% block fullwidthheader %}
+<div class="mountain">
+  <div class="container">
+    
+    <div class="row cover">
+      {% if request.user.is_authenticated %}
+      <h1>SSMPG summer school</h1>
+        <p class="lead">Welcome to SSMPG summer school challenge website</p>
+      {% else %}
+      <div class="col-md-7">
+        <h1>SSMPG summer school</h1>
+        <p class="lead">Welcome to SSMPG summer school challenge website</p>
       </div>
-      <div class="form-group">
-        {{ form.password1.errors }}
-        <input class="form-control input-lg" type="password" placeholder="Password" name="password1">
+      <div class="col-md-5">
+        <h2>Sign up</h2>
+        <form action="." method="post" id="new-account">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="form-group">
+            {{ form.username.errors }}
+            <input class="form-control input-lg" type="text" placeholder="Username" name="username">
+          </div>
+          <div class="form-group">
+            {{ form.password1.errors }}
+            <input class="form-control input-lg" type="password" placeholder="Password" name="password1">
+          </div>
+          <div class="form-group">
+            {{ form.password2.errors }}
+            <input class="form-control input-lg" type="password" placeholder="Confirm Password" name="password2">
+          </div>
+          <!-- <div class="form-group"> -->
+          <!--   {{ form.email.errors }} -->
+          <!--   <input class="form-control input-lg" type="text" placeholder="Email" name="email"> -->
+          <!-- </div> -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-success btn-lg btn-block">Create a new account</button>
+          </div>
+        </form> 
       </div>
-      <div class="form-group">
-        {{ form.password2.errors }}
-        <input class="form-control input-lg" type="password" placeholder="Confirm Password" name="password2">
-      </div>
-      <!-- <div class="form-group"> -->
-      <!--   {{ form.email.errors }} -->
-      <!--   <input class="form-control input-lg" type="text" placeholder="Email" name="email"> -->
-      <!-- </div> -->
-      <div class="form-group">
-        <button type="submit" class="btn btn-success btn-lg btn-block">Create a new account</button>
-      </div>
-    </form> 
+    </div>
+    {% endif %}
+    
   </div>
 </div>
-{% endif %}
-{% endblock content %}
+{% endblock %}
 
 {% block fullwidthfooter %}
 {% endblock fullwidthfooter %}
