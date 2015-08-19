@@ -23,39 +23,42 @@ def register(request, template_name):
         if form.is_valid():
             
             # create new user
-            
+
             new_user = User.objects.create_user(
             username=form.cleaned_data['username'],
             password=form.cleaned_data['password1'],
-            email=form.cleaned_data['email']
+            email='useless'
             )
             
-            new_user.is_active = False
-            new_user.save()
+            # new_user.is_active = False
+            # new_user.save()
 
-            # Build the activation key for their account
+            # # Build the activation key for their account
 
-            salt = sha.new(str(random.random())).hexdigest()[:5]
-            activation_key = sha.new(salt+new_user.username).hexdigest()
+            # salt = sha.new(str(random.random())).hexdigest()[:5]
+            # activation_key = sha.new(salt+new_user.username).hexdigest()
             
-            # Create and save their profile
-            new_profile = Challenger(user=new_user,
-                                     activation_key=activation_key)
-            new_profile.save()
+            # # Create and save their profile
+            # new_profile = Challenger(user=new_user,
+            #                          activation_key=activation_key)
+            # new_profile.save()
             
             # Send an email with the confirmation link
-            email_subject = 'Your new account confirmation'
-            email_body = "Hello, %s, and thanks for signing up for an ssmpg 2015 account!\n\nTo activate your account, click this link: \n\nhttp://localhost:8000/login/confirm/%s" % ( new_user.username, new_profile.activation_key )
-            send_mail(email_subject,
-                      email_body,
-                      'kevin.caye@gmail.com',
-                      [new_user.email])
+            # email_subject = 'Your new account confirmation'
+            # email_body = "Hello, %s, and thanks for signing up for an ssmpg 2015 account!\n\nTo activate your account, click this link: \n\nhttp://localhost:8000/login/confirm/%s" % ( new_user.username, new_profile.activation_key )
+            # send_mail(email_subject,
+            #          email_body,
+            #          'kevin.caye@gmail.com',
+            #          [new_user.email])
             
 
+            # return render_to_response(
+            #     'login/success.html',
+            #     RequestContext( request, { 'confirm': True } )
+            # )
             return render_to_response(
-                'login/success.html',
-                RequestContext( request, { 'confirm': True } )
-            )
+                'login/confirm.html',
+                RequestContext( request, {'success': True}) )
     else:
         form = RegistrationForm()
     variables = RequestContext(request, {
