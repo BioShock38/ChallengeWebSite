@@ -108,16 +108,17 @@ def challenge_submit(request,challenge_id):
             except (KeyError, Dataset.DoesNotExist):
                 return render_error("Wrong selected simulation")
 
-            (soft,option) = (request.POST['software_0'],request.POST['software_1'])
-            if int(soft) < len(Submission.SOFTWARE_CHOICES)-1:
-                software = Submission.SOFTWARE_CHOICES[int(soft)][1]
+            (soft,option) = (form.cleaned_data['software_presented'],
+                             form.cleaned_data['software_other'])
+            if request.POST['softwaretype'] == 'presented':
+                software = soft.name
             else:
                 software = option
 
             nb_submission = Result.objects.filter(submission__challenge=challenge) \
-                                               .filter(submission__simu=selected_simu) \
-                                               .filter(submission__user=request.user) \
-                                               .count()
+                                          .filter(submission__simu=selected_simu) \
+                                          .filter(submission__user=request.user) \
+                                          .count()
             maxsubmission = selected_simu.maxsubmission
 
             if nb_submission >= maxsubmission:
@@ -159,7 +160,7 @@ def challenge_submit(request,challenge_id):
                                    'form': form,
                                    'challenge': challenge,
                                    'res': "Submitted !",
-                                   'infosubmission': (nb_submission,maxsubmission)
+                                   'infosubmission': (nb_submission+1,maxsubmission)
                                   })
                 else :
                     return render(request, 'challenge/submit.html',
@@ -167,7 +168,7 @@ def challenge_submit(request,challenge_id):
                                    'form': form,
                                    'challenge': challenge,
                                    'res': str(r.f1score),
-                                   'infosubmission': [nb_submission,maxsubmission]
+                                   'infosubmission': [nb_submission+1,maxsubmission]
                                })
             
         else:

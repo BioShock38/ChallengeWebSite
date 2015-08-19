@@ -17,24 +17,37 @@
 <div class="fieldWrapper">
 {{ form.dataset.errors }}
 <p class="fieldDescription"> You must choose a dataset. There might be only one dataset. </p>
-{{ form.dataset|bootstrap }}
+{{ form.dataset|bootstrap_horizontal }}
 </div>
 <div class="fieldWrapper"> 
 {{ form.answer.errors }}
 <p class="fieldDescription"> Insert the list of selected marker, eg: "1,13,2344,12" </p>
-{{ form.answer|bootstrap }}
+{{ form.answer|bootstrap_horizontal }}
 </div>
 <div class="fieldWrapper">
 {{ form.level.errors }}
 <p class="fieldDescription"> Choose your level. </p>
-{{ form.level|bootstrap }}
+{{ form.level|bootstrap_horizontal }}
 </div>
-<div class="fieldWrapper">
-{{ form.software.errors }}
+
 <p class="fieldDescription"> Select the software. You can select Other and write the name of your method. </p>
-{{ form.software|bootstrap }}
+
+<div class="fieldWrapper">
+{{ form.softwaretype.errors }}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+          {{form.softwaretype.0}}<br/>
+          {{form.software_presented|bootstrap}}
+        </div>
+        <div class="col-xs-6">
+          {{form.softwaretype.1}}<br/>
+          {{form.software_other|bootstrap}}
+        </div>
+    </div>
 </div>
-<input type="submit" value="Submit" />
+</div>
+<input type="submit" class="btn btn-primary" value="Submit" />
 </form>
 
 {% if infosubmission %}<p>Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </p>{% endif %}

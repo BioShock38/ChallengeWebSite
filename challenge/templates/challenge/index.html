@@ -8,7 +8,7 @@
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-<ul id="menu_challenges">
+<ul class="nav nav-pills nav-stacked" id="menu_challenges">
 {% for challenge in lchallenges %}
 <li><a href="{% url 'challenge:desc' challenge.id %}">{{challenge.name}}</a></li>
 {% endfor %} 

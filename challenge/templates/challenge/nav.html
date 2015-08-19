@@ -1,6 +1,6 @@
 {% block navigation %}
 <div id="menu_challenge">
-    <ul id="menu_general">
+    <ul class="nav nav-tabs" id="menu_general">
        <li><a href="{% url 'challenge:desc' challenge_id %}">Description</a></li>
        <li><a href="{% url 'challenge:rules' challenge_id %}">Rules</a></li>
        <li><a href="{% url 'challenge:evaluation' challenge_id %}">Evaluation</a></li>
