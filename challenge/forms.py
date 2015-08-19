@@ -1,5 +1,5 @@
 from django import forms
-from .models import Submission, Simulation
+from .models import Submission, Dataset
 from .choicewithother import OptionalChoiceField
 
 class SubmitForm(forms.Form):
@@ -12,8 +12,8 @@ class SubmitForm(forms.Form):
                 return " (public Leaderboard)"
         l_simu = kwargs.pop("l_simu")
         super(SubmitForm,self).__init__(*args,**kwargs)
-        self.fields['select_simu'] = forms.ChoiceField(widget=forms.Select,
-                                                       choices=[(simu.name,simu.name + conv(simu.private)) for simu in l_simu])
+        self.fields['dataset'] = forms.ChoiceField(widget=forms.Select,
+                                                   choices=[(simu.name,simu.name + conv(simu.private)) for simu in l_simu])
 
     answer = forms.CharField(max_length=400)
     level = forms.ChoiceField(widget=forms.Select,

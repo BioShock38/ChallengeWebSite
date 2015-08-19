@@ -7,17 +7,18 @@ class Challenge(models.Model):
     desc = models.TextField()
     rules = models.TextField()
     evaluation = models.TextField()
-    lsimu = models.ManyToManyField('Simulation')
+    lsimu = models.ManyToManyField('Dataset')
     isover = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
     
-class Simulation(models.Model):
+class Dataset(models.Model):
     name = models.CharField(max_length=200,unique=True)
     numero = models.IntegerField(unique=True)
     truth = models.CharField(max_length=400)
     private = models.BooleanField(default=True)
+    maxsubmission = models.IntegerField(default=2)
 
     def __str__(self):
         return self.name
@@ -26,7 +27,7 @@ class Simulation(models.Model):
         return map(int,self.truth.split(delimiter))
 
 class Submission(models.Model):
-    simu = models.ForeignKey(Simulation)
+    simu = models.ForeignKey(Dataset)
     challenge = models.ForeignKey(Challenge)
     answer = models.CharField(max_length=400)
     date = models.DateTimeField(auto_now_add=True,blank=True)

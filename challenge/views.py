@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
+from django.http import HttpResponse
+import csv
 
-from .models import Challenge, Simulation, Submission, Result
+from .models import Challenge, Dataset, Submission, Result
 from .forms import SubmitForm
-
-import difflib
 
 # Create your views here.
 def index(request):
@@ -48,6 +48,40 @@ def results_challenge(request,challenge_id):
                                       'submission__methods')
     return JsonResponse(list(l_results),safe=False)
 
+def csv_generate(request,challenge_id):
+    response = HttpResponse(content_type='text/csv')
+    content_disposition = 'attachment; filename="csv_challenge{challengeid}.csv"'
+    content_disposition_formated = content_disposition.format(challengeid=challenge_id)
+    response['Content-Disposition'] = content_disposition_formated
+
+    writer = csv.writer(response, delimiter='\t')
+
+    challenge = Challenge.objects.get(id=challenge_id)
+    results = Result.objects.filter(submission__challenge=challenge) \
+                            .values('submission__date', 'submission__user__username',
+                                    'f1score', 'submission__simu__name',
+                                    'submission__methods')
+    model = results.model
+    realheaders = ['submission__date', 'submission__user__username',
+                   'f1score', 'submission__simu__name',
+                   'submission__methods']
+    headers = ['Date', 'User', 'Score', 'Dataset', 'Method']
+    writer.writerow(headers)
+
+    for res in results:
+        row = []
+        for field in realheaders:
+            val = res.get(field, None)
+            
+            if callable(val):
+                val = val()
+            if type(val) == unicode:
+                val = val.encode("utf-8")
+            row.append(val)
+        writer.writerow(row)
+
+    return response
+
 
 def challenge_submit(request,challenge_id):
 
@@ -60,18 +94,18 @@ def challenge_submit(request,challenge_id):
                        'error_message': msg_error})
 
     challenge = Challenge.objects.get(id=challenge_id)
-    l_simu = Simulation.objects.filter(challenge__id=challenge_id)
+    l_simu = Dataset.objects.filter(challenge__id=challenge_id)
 
     if request.method == 'POST':
         form = SubmitForm(request.POST,l_simu = l_simu)
 
         if not request.user.is_authenticated():
             return render_error("You must be logged in.")
-
+            
         if form.is_valid():
             try:
-                selected_simu = Simulation.objects.get(name=request.POST['select_simu'])
-            except (KeyError, Simulation.DoesNotExist):
+                selected_simu = Dataset.objects.get(name=request.POST['dataset'])
+            except (KeyError, Dataset.DoesNotExist):
                 return render_error("Wrong selected simulation")
 
             (soft,option) = (request.POST['software_0'],request.POST['software_1'])
@@ -79,6 +113,16 @@ def challenge_submit(request,challenge_id):
                 software = Submission.SOFTWARE_CHOICES[int(soft)][1]
             else:
                 software = option
+
+            nb_submission = Result.objects.filter(submission__challenge=challenge) \
+                                               .filter(submission__simu=selected_simu) \
+                                               .filter(submission__user=request.user) \
+                                               .count()
+            maxsubmission = selected_simu.maxsubmission
+
+            if nb_submission >= maxsubmission:
+                return render_error("You have already " + str(nb_submission) +
+                                    "/" + str(maxsubmission) + " submissions.")
 
             s = Submission.objects.create(simu=selected_simu,
                                           challenge=challenge,
@@ -96,23 +140,35 @@ def challenge_submit(request,challenge_id):
 
                 # TODO : Real F1 score
 
-                sm = difflib.SequenceMatcher(None,parsed_answer,parsed_truth)
+                truth = set(parsed_truth)
+                predicted = set(parsed_answer)
 
-                r = Result.objects.create(submission=s,f1score=sm.ratio())
+                try:
+                    precision = float(len(truth & predicted)) / len(predicted)
+                    recall = float(len(truth & predicted)) / len(truth)
+
+                    f1score = 2*precision*recall / (precision + recall)
+                except ZeroDivisionError:
+                    f1score = 0
+
+                r = Result.objects.create(submission=s,f1score=f1score)
 
                 if selected_simu.private:
                     return render(request, 'challenge/submit.html',
                                   {'l_simu' : l_simu,
                                    'form': form,
                                    'challenge': challenge,
-                                   'res': "Submitted !"
+                                   'res': "Submitted !",
+                                   'infosubmission': (nb_submission,maxsubmission)
                                   })
                 else :
                     return render(request, 'challenge/submit.html',
                                   {'l_simu' : l_simu,
                                    'form': form,
                                    'challenge': challenge,
-                                  'res': str(r.f1score)})
+                                   'res': str(r.f1score),
+                                   'infosubmission': [nb_submission,maxsubmission]
+                               })
             
         else:
             return render_error("Invalid Form")

@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% load bootstrap %}
+
 {% include "challenge/nav.html" with challenge_id=challenge.id %}
 
 <div id="content">
@@ -13,28 +15,29 @@
 <form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
 <div class="fieldWrapper">
-{{ form.select_simu.errors }}
-<label for="{{ form.select_simu.id_for_label }}"> Simulations:</label>
-{{ form.select_simu }}
+{{ form.dataset.errors }}
+<p class="fieldDescription"> You must choose a dataset. There might be only one dataset. </p>
+{{ form.dataset|bootstrap }}
 </div>
-<div class="fieldWrapper">
+<div class="fieldWrapper"> 
 {{ form.answer.errors }}
-<label for="{{ form.answer.id_for_label }}"> Your Answer:</label>
-{{ form.answer }}
+<p class="fieldDescription"> Insert the list of selected marker, eg: "1,13,2344,12" </p>
+{{ form.answer|bootstrap }}
 </div>
 <div class="fieldWrapper">
 {{ form.level.errors }}
-<label for="{{ form.level.id_for_label }}"> Your Level:</label>
-{{ form.level }}
+<p class="fieldDescription"> Choose your level. </p>
+{{ form.level|bootstrap }}
 </div>
 <div class="fieldWrapper">
 {{ form.software.errors }}
-<label for="{{ form.software.id_for_label }}"> Your Software:</label>
-{{ form.software }}
+<p class="fieldDescription"> Select the software. You can select Other and write the name of your method. </p>
+{{ form.software|bootstrap }}
 </div>
 <input type="submit" value="Submit" />
 </form>
 
+{% if infosubmission %}<p>Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </p>{% endif %}
 {% if res %}<p><strong>{{res}}</strong></p>{% endif %}
 
 </div>
