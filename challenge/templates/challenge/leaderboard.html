@@ -10,12 +10,12 @@
 
 <div id="content">
 <div id="graph">
-  <h2> Leaderboard Graph </h2>
+  <h2 style="text-align: center;"> Leaderboard Graph </h2>
 <table id="soft_graph">
 </table>
 </div>
 <div id="lead">
-<h2> Leaderboard Table </h2>
+  <h2 style="text-align: center;"> Leaderboard Table </h2>
 <p> Leaderboard of the best score for one user with one method. </p>
   <table id="leaderboard" style="width:100%">
   </table>
@@ -104,7 +104,7 @@ var points = svg.selectAll("circle")
 var pointsAttributes = points
    .attr("cx", function(d) {return x(d.f1score)})
    .attr("cy", 0)
-   .attr("r", 10)
+   .attr("r", 5)
    .style("fill", function(d) {return (user_id == d.user_id ? "blue" : "red")});
 
 var points = points

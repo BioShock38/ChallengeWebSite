@@ -26,6 +26,15 @@ class Dataset(models.Model):
     def parse_truth(self,delimiter=','):
         return map(int,self.truth.split(delimiter))
 
+class Method(models.Model):
+    name = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return u'{0}'.format(self.name)
+
 class Submission(models.Model):
     simu = models.ForeignKey(Dataset)
     challenge = models.ForeignKey(Challenge)
@@ -47,13 +56,7 @@ class Submission(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
-    SOFTWARE_CHOICES = [
-        ("0", 'CeluiQuiEstRandom'),
-        ("1", 'CeluiQuiMarcheJamais'),
-        ("2", 'DEEPLEARNING'),
-        ("3", 'Other')
-        ]
-    methods = models.CharField(max_length=200,
+    methods = models.CharField(max_length=400,
                                default = 'Random')
 
     def __str__(self):
