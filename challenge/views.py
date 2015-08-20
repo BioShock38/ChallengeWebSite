@@ -60,12 +60,12 @@ def csv_generate(request,challenge_id):
     results = Result.objects.filter(submission__challenge=challenge) \
                             .values('submission__date', 'submission__user__username',
                                     'f1score', 'submission__simu__name',
-                                    'submission__methods')
+                                    'submission__methods', 'submission__level')
     model = results.model
     realheaders = ['submission__date', 'submission__user__username',
                    'f1score', 'submission__simu__name',
-                   'submission__methods']
-    headers = ['Date', 'User', 'Score', 'Dataset', 'Method']
+                   'submission__methods', 'submission__level']
+    headers = ['Date', 'User', 'Score', 'Dataset', 'Method', 'Level']
     writer.writerow(headers)
 
     for res in results:
