@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
+from django.utils.html import escape
 from django.http import HttpResponse
 import csv
 
@@ -46,6 +47,11 @@ def results_challenge(request,challenge_id):
                                       'submission__simu',
                                       'submission__simu__name',
                                       'submission__methods')
+    for res in l_results:
+        for key, value in res.iteritems():
+            if type(value) == unicode:
+                res[key] = escape(value)
+                
     return JsonResponse(list(l_results),safe=False)
 
 def csv_generate(request,challenge_id):
