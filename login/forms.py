@@ -15,6 +15,8 @@ class RegistrationForm(forms.Form):
         try:
             user = User.objects.get(username__iexact=self.cleaned_data['username'])
         except User.DoesNotExist:
+            if  len(self.cleaned_data['username'])>30:
+                raise forms.ValidationError(_("Length must be lower than 30"))
             return self.cleaned_data['username']
         raise forms.ValidationError(_("The username already exists. Please try another one."))
 
@@ -27,6 +29,8 @@ class RegistrationForm(forms.Form):
 
     def clean(self):
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
+            if  len(self.cleaned_data['password1'])>30:
+                raise forms.ValidationError(_("Length must be lower than 30"))
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
                 raise forms.ValidationError(_("The two password fields did not match."))
         return self.cleaned_data
