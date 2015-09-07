@@ -3,32 +3,39 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.utils.html import escape
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 import csv
 
 from .models import Challenge, Dataset, Submission, Result
 from .forms import SubmitForm
 
+
 # Create your views here.
+@login_required(login_url='/login/login/')
 def index(request):
     l_challenges = Challenge.objects.all()
     context = {'lchallenges': l_challenges}
     return render(request, 'challenge/index.html', context)
 
+@login_required(login_url='/login/login/')
 def desc(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
     context = {'challenge': challenge}
     return render(request, 'challenge/desc.html', context)
 
+@login_required(login_url='/login/login/')
 def rules(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
     context = {'challenge': challenge}
     return render(request, 'challenge/rules.html', context)
 
+@login_required(login_url='/login/login/')
 def evaluation(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
     context = {'challenge': challenge}
     return render(request, 'challenge/evaluation.html', context)
 
+@login_required(login_url='/login/login/')
 def leaderboard(request,challenge_id):
     challenge = Challenge.objects.get(id=challenge_id)
     if request.user.is_authenticated():
@@ -91,7 +98,7 @@ def csv_generate(request,challenge_id):
 
     return response
 
-
+@login_required(login_url='/login/login/')
 def challenge_submit(request,challenge_id):
 
     # render the template with the error
