@@ -32,6 +32,6 @@ class SubmitForm(forms.Form):
         widget=forms.RadioSelect
     )
 
-    software = forms.ModelChoiceField(Method.objects.all(), required=True)
-    software_desc = forms.CharField(label="", widget=forms.Textarea,
+    method = forms.ModelChoiceField(Method.objects.all(), required=True)
+    method_desc = forms.CharField(label="", widget=forms.Textarea,
                                     max_length=1000, required=False)
