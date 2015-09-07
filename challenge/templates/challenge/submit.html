@@ -14,8 +14,8 @@
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-{% if infosubmission %}<p>Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </p>{% endif %}
-{% if res %}<p><strong>{{res}}</strong></p>{% endif %}
+{% if infosubmission %}<h2 style="text-align: center;">Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </h2>{% endif %}
+{% if res %}<h2 style="text-align: center; color: red;"><strong>Score : {{res}}</strong></h2>{% endif %}
 
 <form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
