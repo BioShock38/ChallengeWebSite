@@ -137,7 +137,7 @@ def challenge_submit(request,challenge_id):
                                           date=timezone.now(),
                                           methods=software,
                                           level=form.cleaned_data['level'],
-                                          with_env_variable=form.cleaned_data['with_env_variable'],
+                                          with_env_variable=form.cleaned_data['with_environment_variable'],
                                           desc_method=form.cleaned_data['software_desc'],
                                           user=request.user)
 

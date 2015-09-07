@@ -26,8 +26,12 @@ class SubmitForm(forms.Form):
     level = forms.ChoiceField(widget=forms.Select,
                               choices=Submission.LEVEL_CHOICES)
 
-    with_env_variable = forms.BooleanField()
-    
+    with_environment_variable = forms.TypedChoiceField(
+        coerce=lambda x: x == 'True',
+        choices=((False, 'Yes'), (True, 'No')),
+        widget=forms.RadioSelect
+    )
+
     software = forms.ModelChoiceField(Method.objects.all(), required=True)
     software_desc = forms.CharField(label="", widget=forms.Textarea,
                                     max_length=1000, required=False)
