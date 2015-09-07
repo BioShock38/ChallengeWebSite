@@ -117,8 +117,8 @@ def challenge_submit(request,challenge_id):
             except (KeyError, Dataset.DoesNotExist):
                 return render_error("Wrong selected simulation")
 
-            (soft,desc_soft) = (form.cleaned_data['software'],
-                             form.cleaned_data['software_desc'])
+            (soft,desc_soft) = (form.cleaned_data['method'],
+                             form.cleaned_data['method_desc'])
             software = soft.name
 
             nb_submission = Result.objects.filter(submission__challenge=challenge) \

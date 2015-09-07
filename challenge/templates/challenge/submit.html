@@ -42,14 +42,14 @@
 </div>
 
 <div class="fieldWrapper">
-{{ form.software.errors }}
+{{ form.method.errors }}
 <p class="fieldDescription"> <em>Name of the method</em></p>
-{{ form.software|bootstrap_horizontal }}
+{{ form.method|bootstrap_horizontal }}
 </div>
 <div class="fieldWrapper">
-{{ form.desc.errors }}
+{{ form.method_desc.errors }}
 <p class="fieldDescription"> <em>Description, e.g., "LFMM with K=15, burnin=2000, iterations=4000, number of repetitions=10"</em></p>
-{{ form.software_desc|bootstrap_horizontal }}
+{{ form.method_desc|bootstrap_horizontal }}
 </div>
 <input type="submit" class="btn btn-primary" value="Submit" />
 </form>
