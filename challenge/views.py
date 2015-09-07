@@ -114,12 +114,9 @@ def challenge_submit(request,challenge_id):
             except (KeyError, Dataset.DoesNotExist):
                 return render_error("Wrong selected simulation")
 
-            (soft,option) = (form.cleaned_data['software_presented'],
-                             form.cleaned_data['software_other'])
-            if request.POST['softwaretype'] == 'presented':
-                software = soft.name
-            else:
-                software = option
+            (soft,desc_soft) = (form.cleaned_data['software'],
+                             form.cleaned_data['software_desc'])
+            software = soft.name
 
             nb_submission = Result.objects.filter(submission__challenge=challenge) \
                                           .filter(submission__simu=selected_simu) \
@@ -136,6 +133,9 @@ def challenge_submit(request,challenge_id):
                                           answer=request.POST['answer'],
                                           date=timezone.now(),
                                           methods=software,
+                                          level=form.cleaned_data['level'],
+                                          with_env_variable=form.cleaned_data['with_env_variable'],
+                                          desc_method=form.cleaned_data['software_desc'],
                                           user=request.user)
 
             try:

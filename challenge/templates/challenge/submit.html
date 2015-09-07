@@ -14,6 +14,9 @@
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
+{% if infosubmission %}<p>Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </p>{% endif %}
+{% if res %}<p><strong>{{res}}</strong></p>{% endif %}
+
 <form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
 <div class="fieldWrapper">
@@ -32,28 +35,24 @@
 {{ form.level|bootstrap_horizontal }}
 </div>
 
-<p class="fieldDescription"> <em>You can select either a presented method or write the name of your method (400 characters max. still better than Twitter). </em></p>
+<div class="fieldWrapper">
+{{ form.with_env_variable.errors }}
+<p class="fieldDescription"> <em>With Environnement variable. </em></p>
+{{ form.with_env_variable|bootstrap_horizontal }}
+</div>
 
 <div class="fieldWrapper">
-{{ form.softwaretype.errors }}
-<div class="container">
-    <div class="row">
-        <div class="col-xs-6">
-          {{form.softwaretype.0}}<br/>
-          {{form.software_presented|bootstrap}}
-        </div>
-        <div class="col-xs-6">
-          {{form.softwaretype.1}}<br/>
-          {{form.software_other|bootstrap}}
-        </div>
-    </div>
+{{ form.software.errors }}
+<p class="fieldDescription"> <em>Name of the method</em></p>
+{{ form.software|bootstrap_horizontal }}
 </div>
+<div class="fieldWrapper">
+{{ form.desc.errors }}
+<p class="fieldDescription"> <em>Description</em></p>
+{{ form.software_desc|bootstrap_horizontal }}
 </div>
 <input type="submit" class="btn btn-primary" value="Submit" />
 </form>
-
-{% if infosubmission %}<p>Limit of submission for this dataset {{infosubmission.0}}/{{infosubmission.1}} </p>{% endif %}
-{% if res %}<p><strong>{{res}}</strong></p>{% endif %}
 
 </div>
 {% endblock content %}

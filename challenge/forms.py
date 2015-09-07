@@ -21,18 +21,13 @@ class SubmitForm(forms.Form):
         self.fields['dataset'] = forms.ChoiceField(widget=forms.Select,
                                                    choices=[(simu.name,simu.name +
                                                              conv(simu.private)) for simu in l_simu])
-        if data and data.get('softwaretype', None) == self.OTHER:
-            self.fields['software_other'].required = True
-        if data and data.get('softwaretype', None) == self.PRESENTED:
-            self.fields['software_presented'].required = True
-
 
     answer = forms.CharField(max_length=400)
     level = forms.ChoiceField(widget=forms.Select,
                               choices=Submission.LEVEL_CHOICES)
-    
-    softwaretype = forms.ChoiceField(choices=METHOD_TYPE_CHOICES,
-                                     widget=forms.RadioSelect)
 
-    software_presented = forms.ModelChoiceField(Method.objects.all(), required=False)
-    software_other = forms.CharField(label="", max_length=400, required=False)
+    with_env_variable = forms.BooleanField()
+    
+    software = forms.ModelChoiceField(Method.objects.all(), required=True)
+    software_desc = forms.CharField(label="", widget=forms.Textarea,
+                                    max_length=1000, required=False)

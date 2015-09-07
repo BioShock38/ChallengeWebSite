@@ -46,7 +46,7 @@ class Submission(models.Model):
     EXPERT = 'EXP'
     LEVEL_CHOICES = [
         (BEGINNER, 'Beginner'),
-        (ADVANCE, 'Advance'),
+        (ADVANCE, 'Advanced'),
         (EXPERT, 'Expert')
     ]
 
@@ -56,8 +56,10 @@ class Submission(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
+    with_env_variable = models.BooleanField(default=True)
     methods = models.CharField(max_length=400,
                                default = 'Random')
+    desc_method = models.TextField(max_length=1000, default = "None")
 
     def __str__(self):
         return "id={id}, date={date}, user={user}".format(id=self.id,date=self.date,user=self.user)

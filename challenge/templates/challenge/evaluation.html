@@ -5,7 +5,7 @@
 {% include "challenge/nav.html" with challenge_id=challenge.id %}
 
 <div id="content">
-<p>{{challenge.evaluation}}</p>
+<p>{{ challenge.evaluation|safe }}</p>
 </div>
 
 {% endblock content %}
