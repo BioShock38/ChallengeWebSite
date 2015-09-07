@@ -6,11 +6,11 @@
     <div class="row cover">
       {% if request.user.is_authenticated %}
       <h1>SSMPG summer school</h1>
-        <p class="lead">Welcome to SSMPG summer school challenge website</p>
+        <p class="lead">Welcome to the SSMPG summer school challenge website</p>
       {% else %}
       <div class="col-md-7">
         <h1>SSMPG summer school</h1>
-        <p class="lead">Welcome to SSMPG summer school challenge website</p>
+        <p class="lead">Welcome to the SSMPG summer school challenge website</p>
       </div>
       <div class="col-md-5">
         <h2>Sign up</h2>
@@ -38,11 +38,26 @@
           </div>
         </form> 
       </div>
-    </div>
+
     {% endif %}
-    
+    </div>    
   </div>
 </div>
+
+<div class="container">
+  <!-- Jumbotron -->
+  <div class="jumbotron">
+    <h1>The challenge!</h1>
+    <p class="lead">
+      In this challenge, attendees can download simulated data for the SSMPG challenge and complete the analysis of the data using statistical methods for genome scans of selection (outflank, selestim, pcadapt, lfmm/lea, flk, bayespass, other).
+      {% if request.user.is_authenticated %}
+    <p><a class="btn btn-lg btn-success" href="/challenge/" role="button">Get started</a></p>
+    {% else %}
+    <p><a class="btn btn-lg btn-success" href="/login/login" role="button">Get started</a></p>
+    {% endif %}
+  </div>
+</div>
+
 {% endblock %}
 
 {% block fullwidthfooter %}
