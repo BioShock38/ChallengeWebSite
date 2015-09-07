@@ -22,7 +22,7 @@ class SubmitForm(forms.Form):
                                                    choices=[(simu.name,simu.name +
                                                              conv(simu.private)) for simu in l_simu])
 
-    answer = forms.CharField(max_length=400)
+    answer = forms.CharField(label = 'List of candidate SNPs', max_length=400)
     level = forms.ChoiceField(widget=forms.Select,
                               choices=Submission.LEVEL_CHOICES)
 
