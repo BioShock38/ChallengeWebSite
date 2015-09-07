@@ -1,9 +1,18 @@
 .mountain {
-    height: 40em;
+    height: 30em;
   padding-top: 0em;
   margin-bottom: 0em;
   background-image: url(../img/1321864732_1088470119.jpg);
   background-size: cover;
   color: #fff;
   text-align: left;
+}
+
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
 }
