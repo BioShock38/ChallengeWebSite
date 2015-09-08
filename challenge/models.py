@@ -16,7 +16,7 @@ class Challenge(models.Model):
 class Dataset(models.Model):
     name = models.CharField(max_length=200,unique=True)
     numero = models.IntegerField(unique=True)
-    truth = models.CharField(max_length=400)
+    truth = models.CharField(max_length=4000)
     private = models.BooleanField(default=True)
     maxsubmission = models.IntegerField(default=2)
 
@@ -38,7 +38,7 @@ class Method(models.Model):
 class Submission(models.Model):
     simu = models.ForeignKey(Dataset)
     challenge = models.ForeignKey(Challenge)
-    answer = models.CharField(max_length=400)
+    answer = models.CharField(max_length=4000)
     date = models.DateTimeField(auto_now_add=True,blank=True)
 
     BEGINNER = 'BEG'
