@@ -62,7 +62,7 @@ var x = d3.scale.linear()
           .range([0,width]);
 
 var final_data;
-d3.json("{% url 'challenge:results_challenge' challenge.id%}", function(error,data) {
+d3.json("https://ssmpg-challenge.imag.fr/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
 data.forEach(function(d) {
    d.date = parseDate(d.submission__date);
@@ -150,7 +150,7 @@ var scale_svg = scale_td.append("svg")
 
 </script>
 <script>
-d3.json("{% url 'challenge:results_challenge' challenge.id%}", function(error,data) {
+d3.json("https://ssmpg-challenge.imag.fr/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
 data.forEach(function(d) {
    d.date = parseDate(d.submission__date);
