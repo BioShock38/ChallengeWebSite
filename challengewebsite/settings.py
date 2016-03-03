@@ -25,7 +25,7 @@ SECRET_KEY = '(*-p2g7+03-$9ordp#-eah4_$w&#x8(4!#!kqutltv=19(j_l7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
@@ -113,3 +113,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "wwwstatic/")
 # EMAIL_HOST_PASSWORD = '0619451146'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
+
+
+# Secure param
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = True
