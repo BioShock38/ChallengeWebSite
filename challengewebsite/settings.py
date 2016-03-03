@@ -107,8 +107,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "wwwstatic/")
-
-
 # Mail settingxs
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER='Alfred.Pi.Kevin.caye@gmail.com'
