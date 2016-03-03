@@ -11,12 +11,6 @@ if getpass.getuser()+'@'+socket.gethostname() != "challengewebsite@timc-bcm-15.i
 os.system("git fetch")
 os.system("git reset --hard origin/master")
 
-
-# Migration
-os.system("./manage.py makemigrations")
-os.system("./manage.py migrate")
-os.system("./manage.py collectstatic")
-
 # Toggle DEBUG
 from tempfile import mkstemp
 from shutil import move
@@ -33,4 +27,9 @@ def replace(file_path, pattern, subst):
     remove(file_path)
     #Move new file
     move(abs_path, file_path)
-replace("settings.py", "DEBUG = True", "DEBUG = False")
+replace("challengewebsite/settings.py", "DEBUG = True", "DEBUG = False")
+
+# Migration
+os.system("./manage.py makemigrations")
+os.system("./manage.py migrate")
+os.system("./manage.py collectstatic")
