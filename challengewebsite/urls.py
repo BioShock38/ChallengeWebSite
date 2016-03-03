@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 
-
-# TODO: Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
+from django.conf.urls.static import static
 import home.views as hv
 
 urlpatterns = [
@@ -27,7 +27,8 @@ urlpatterns = [
     url(r'^login/', include('login.urls',namespace='login')),
     url(r'^$', hv.home, name = 'home'),
     url(r'^home/', include('home.urls',namespace='home')),
-] 
+]
 
-# TODO: Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
-urlpatterns += staticfiles_urlpatterns()
+# Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
