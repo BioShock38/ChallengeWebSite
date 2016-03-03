@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^login/', include('login.urls',namespace='login')),
     url(r'^$', hv.home, name = 'home'),
     url(r'^home/', include('home.urls',namespace='home')),
-] 
+]
 
 # TODO: Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
 urlpatterns += staticfiles_urlpatterns()
