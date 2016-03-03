@@ -1,4 +1,5 @@
 from django.conf.urls import url
+import django.contrib.auth.views
 
 import login.views as lv
 
