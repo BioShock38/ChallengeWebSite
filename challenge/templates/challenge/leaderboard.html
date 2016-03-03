@@ -4,6 +4,7 @@
 
 {% include "challenge/nav.html" with challenge_id=challenge.id %}
 
+{% load staticfiles %}
 <script>
   var user_id = {{userid}};
 </script>
@@ -49,7 +50,7 @@ table#leaderboard tr:nth-child(odd) {
 }
 </style>
 
-<script src="http://d3js.org/d3.v3.js"></script>
+<script src="{% static "js/d3.min.js" %}"></script>
 <script>
 var margin = {top: 20, right: 10, bottom: 10, left:40},
     width = 800 - margin.left - margin.right,
@@ -62,7 +63,7 @@ var x = d3.scale.linear()
           .range([0,width]);
 
 var final_data;
-d3.json("https://ssmpg-challenge.imag.fr/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
+d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
 data.forEach(function(d) {
    d.date = parseDate(d.submission__date);
@@ -150,7 +151,7 @@ var scale_svg = scale_td.append("svg")
 
 </script>
 <script>
-d3.json("https://ssmpg-challenge.imag.fr/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
+d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
 data.forEach(function(d) {
    d.date = parseDate(d.submission__date);

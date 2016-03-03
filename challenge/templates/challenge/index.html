@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{% load staticfiles %}
 <div id="content">
 
 <h1 style="text-align: center;"> Challenges </h1>
@@ -10,7 +11,15 @@
 
 <ul class="nav nav-pills nav-stacked" id="menu_challenges">
 {% for challenge in lchallenges %}
-<li><a href="{% url 'challenge:desc' challenge.id %}">{{challenge.name}}</a></li>
+{% with challenge.difficulty|stringformat:"i" as diff %}
+{% with 'challenge/img/'|add:diff|add:'stars.png' as image_static %}
+<li>
+  <div>
+    <img src={% static image_static %}><a href="{% url 'challenge:desc' challenge.id %}">{{challenge.name}}</a>
+  </div>
+</li>
+{% endwith %}
+{% endwith %}
 {% endfor %} 
 </ul>
 
