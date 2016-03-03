@@ -23,9 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(*-p2g7+03-$9ordp#-eah4_$w&#x8(4!#!kqutltv=19(j_l7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+import socket
+import getpass
+if getpass.getuser()+'@'+socket.gethostname() == 'apache@timc-bcm-15.imag.fr':
+    DEBUG = False
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -102,15 +107,23 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-      os.path.join(BASE_DIR, "static"),
-)
-STATIC_ROOT = os.path.join(BASE_DIR, "static2/")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "wwwstatic/")
 # Mail settingxs
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER='Alfred.Pi.Kevin.caye@gmail.com'
 # EMAIL_HOST_PASSWORD = '0619451146'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
+
+
+# Secure param
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = True
