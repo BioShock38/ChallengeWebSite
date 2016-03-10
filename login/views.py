@@ -86,11 +86,6 @@ def register_success(request):
     return render(request,
     'login/success.html',{})
 
-def logout_page(request):
-    logout(request)
-    return render(request,
-    'home/home.html')
-
 @login_required
 def home(request):
     return render(request,
