@@ -88,7 +88,8 @@ def register_success(request):
 
 def logout_page(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return render(request,
+    'home/home.html')
 
 @login_required
 def home(request):
