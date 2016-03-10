@@ -20,7 +20,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
 	  <li><a href="{% url 'account:index' %}" data-toggle="tooltip" data-placement="bottom" data_container="body" title="History">Welcome '{{ request.user.username }}'</a></li>
-          <li><a href="/login/logout" data-toggle="tooltip" data-placement="bottom" data-container="body" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a></li>
+          <li><a href="/login/logout/" data-toggle="tooltip" data-placement="bottom" data-container="body" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a></li>
         </ul>
         {% else %}
           <a href="/login/login/" title="Sign in" class="btn btn-default navbar-btn navbar-right">Sign in</a>
