@@ -9,10 +9,11 @@ class Challenge(models.Model):
     evaluation = models.TextField()
     lsimu = models.ManyToManyField('Dataset')
     isover = models.BooleanField(default=False)
+    difficulty = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.name
-    
+
 class Dataset(models.Model):
     name = models.CharField(max_length=200,unique=True)
     numero = models.IntegerField(unique=True)

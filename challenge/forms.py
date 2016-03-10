@@ -1,14 +1,7 @@
 from django import forms
 from .models import Submission, Dataset, Method
-from .choicewithother import OptionalChoiceField
 
 class SubmitForm(forms.Form):
-
-    PRESENTED, OTHER = 'presented', 'other'
-    METHOD_TYPE_CHOICES = (
-        (PRESENTED, 'One of the presented methods'),
-        (OTHER, 'Your own method'),
-        )
 
     def __init__(self,data=None,*args,**kwargs):
         def conv(private):
@@ -22,7 +15,7 @@ class SubmitForm(forms.Form):
                                                    choices=[(simu.name,simu.name +
                                                              conv(simu.private)) for simu in l_simu])
 
-    answer = forms.CharField(label = 'List of candidate SNPs', max_length=400)
+    answer = forms.CharField(label = 'List of candidate SNPs', max_length=1000)
     level = forms.ChoiceField(widget=forms.Select,
                               choices=Submission.LEVEL_CHOICES)
 
