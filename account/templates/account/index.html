@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+<div id="content">
+
+<h1 style="text-align: center;"> Historic </h1>
+
+{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+
+<ul class="nav nav-pills nav-stacked" id="menu_challenges">
+{% for res in results %}
+<li>
+  {{ res.f1score }}
+</li>
+{% endfor %} 
+</ul>
+
+</div>
+{% endblock content %}
