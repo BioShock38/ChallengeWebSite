@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^challenge/', include('challenge.urls',namespace='challenge')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', include('login.urls',namespace='login')),
+    url(r'^account/', include('account.urls',namespace='account')),
     url(r'^$', hv.home, name = 'home'),
     url(r'^home/', include('home.urls',namespace='home')),
 ]
