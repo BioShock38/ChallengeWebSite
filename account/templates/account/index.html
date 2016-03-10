@@ -3,19 +3,57 @@
 {% block content %}
 
 {% load staticfiles %}
+
+<script src="{% static "js/d3.min.js" %}"></script>
+<script>
+  var jsonObject = JSON.parse('{{ json_results | escapejs }}');
+</script>
+
 <div id="content">
 
-<h1 style="text-align: center;"> Historic </h1>
+  <h1 style="text-align: center;"> History </h1>
 
-{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+  {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-<ul class="nav nav-pills nav-stacked" id="menu_challenges">
-{% for res in results %}
-<li>
-  {{ res.f1score }}
-</li>
-{% endfor %} 
-</ul>
-
+  <div id="graph">
+    <table class="table table-hover">
+    </table>
+  </div>
 </div>
+
+<script>
+
+var margin = {top: 20, right: 10, bottom: 10, left: 20};
+var witdth = 500 - margin.left - margin.right;
+var height = 400 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%L%L+00:00").parse;
+var formatDate = d3.time.format("%Y-%m-%d");
+
+data = jsonObject;
+
+data.forEach(function(d) {
+    d.date = parseDate(d.submission__date);
+    d.f1score = +d.f1score;
+    d.simu = d.submission__simu__name;
+});
+
+var graph = d3.select("#graph");
+var table = graph.select("table");
+
+var thead = table.append("thead");
+var row = thead.append("tr");
+var date = row.append("th").html("Date");
+var date = row.append("th").html("Challenge");
+var score = row.append("th").html("F1 Score");
+
+var tbody = table.append("tbody");
+data.forEach(function(d) {
+    var row = tbody.append("tr");
+    var date = row.append("td").html(formatDate(d.date));
+    var date = row.append("td").html(d.simu);
+    var score = row.append("td").html(d.f1score);
+});
+
+</script>
 {% endblock content %}
