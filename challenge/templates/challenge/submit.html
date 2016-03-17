@@ -15,7 +15,7 @@
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
 {% if infosubmission %}<h2 style="text-align: center;">Number of submissions for this dataset: {{infosubmission.0}} </h2>{% endif %}
-{% if res %}<h2 style="text-align: center; color: red;"><strong>F1 Score: {{res}}</strong></h2>{% endif %}
+{% if res %}<h2 style="text-align: center; color: red;"><strong>You obtain a F1 score of {{res}}</strong></h2>{% endif %}
 
 <form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
