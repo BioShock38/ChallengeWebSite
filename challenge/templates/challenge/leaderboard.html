@@ -148,6 +148,7 @@ var scale_svg = scale_td.append("svg")
 
 </script>
 <script>
+var res;
 d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
 data.forEach(function(d) {
@@ -159,7 +160,7 @@ data.forEach(function(d) {
 });
 
 function sortByScore(a, b) {
-    return b.values - a.values;
+    return d3.descending(a.values.f1score,b.values.f1score);
 }
 
 var nestedData = d3.nest().key(function(d) { return d.user + " " + d.method })
@@ -170,7 +171,8 @@ var nestedData = d3.nest().key(function(d) { return d.user + " " + d.method })
                           })
                           .entries(data);
 
-var sortedNestedData = nestedData.sort(sortByScore).slice(1,20);
+var sortedNestedData = nestedData.sort(sortByScore).slice(0,19);
+res = nestedData;
 
 var row = d3.select("#leaderboard").append("tr");
 
