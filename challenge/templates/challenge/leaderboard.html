@@ -105,12 +105,9 @@ var points = svg.selectAll("circle")
 var pointsAttributes = points
    .attr("cx", function(d) {return x(d.f1score)})
    .attr("cy", 0)
-   .attr("r", 5)
+   .attr("r", function(d) {return (user_id == d.user_id ? 10 : 5)})
+   .style("fill-opacity", "0.7")
    .style("fill", function(d) {return (user_id == d.user_id ? "blue" : "red")});
-
-var points = points
-   .append("title")
-   .text(function(d) {return d.user});
 
 var tooltip = d3.select("#graph").append("div")
     .attr("class", "tooltip")
@@ -120,7 +117,7 @@ pointsAttributes.on("mouseover", function(d) {
             tooltip.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-            tooltip.html(formatDate(d.date) + "<br/>"  + d.user + "<br/> score :" + d.f1score.toFixed(4))  
+            tooltip.html("score :" + d.f1score.toFixed(4))  
                 .style("left", (d3.event.pageX) + "px")     
                 .style("top", (d3.event.pageY - 28) + "px");    
             })                  
@@ -167,18 +164,20 @@ function sortByScore(a, b) {
 
 var nestedData = d3.nest().key(function(d) { return d.user + " " + d.method })
                           .rollup(function(leaves) {
-                              return d3.max(leaves, function(d) {
+                              return {"user": leaves[0].user, "method": leaves[0].method, "f1score": d3.max(leaves, function(d) {
                                   return +d.f1score;
-                              });
+                              })}
                           })
                           .entries(data);
 
-var sortedNestedData = nestedData.sort(sortByScore);
+var sortedNestedData = nestedData.sort(sortByScore).slice(1,20);
 
 var row = d3.select("#leaderboard").append("tr");
 
 var td_name = row.append("td").append("b")
-                 .html("User and software");
+                 .html("User");
+var td_soft = row.append("td").append("b")
+                 .html("Method");
 var td_res = row.append("td").append("b")
                 .html("F1 score");
 
@@ -187,9 +186,11 @@ sortedNestedData.forEach(function(d) {
 var row = d3.select("#leaderboard").append("tr");
 
 var td_name = row.append("td")
-                 .html(d.key);
+                 .html(d.values.user);
+var td_soft = row.append("td")
+                 .html(d.values.method);
 var td_res = row.append("td")
-                .html(d.values);
+                .html(d.values.f1score);
 
 });
 
