@@ -3,14 +3,17 @@ import re
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
- 
+from captcha.fields import CaptchaField
+
 class RegistrationForm(forms.Form):
- 
+
     username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
     # email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Email address"))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password"))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password (again)"))
- 
+    # captcha
+    captcha = CaptchaField()
+
     def clean_username(self):
         try:
             user = User.objects.get(username__iexact=self.cleaned_data['username'])
@@ -20,12 +23,6 @@ class RegistrationForm(forms.Form):
             return self.cleaned_data['username']
         raise forms.ValidationError(_("The username already exists. Please try another one."))
 
-    # def clean_email(self):
-    #     try:
-    #         mail = User.objects.get(email=self.cleaned_data['email'])
-    #     except User.DoesNotExist:
-    #         return self.cleaned_data['email']
-    #     raise forms.ValidationError(_("The email adress already exists. Please try another one."))
 
     def clean(self):
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
