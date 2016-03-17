@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^account/', include('account.urls',namespace='account')),
     url(r'^$', hv.home, name = 'home'),
     url(r'^home/', include('home.urls',namespace='home')),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
 # Only during development see  http://stackoverflow.com/questions/9181047/django-static-files-development and see https://docs.djangoproject.com/en/1.8/howto/static-files/ to deploy
