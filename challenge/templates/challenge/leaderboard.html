@@ -12,8 +12,7 @@
 <div id="content">
 <div id="graph">
   <h2 style="text-align: center;"> Leaderboard Graph </h2>
-<table id="soft_graph">
-</table>
+  <p> Histogram of F1 score </p>
 </div>
 <div id="lead">
   <h2 style="text-align: center;"> Leaderboard Table </h2>
@@ -24,24 +23,33 @@
 </div>
 
 <style>
-div.tooltip {   
-  position: absolute;           
-  text-align: center;           
-  width: 100px;                  
-  height: 50px;                 
-  padding: 2px;             
-  font: 12px sans-serif;        
-  background: lightsteelblue;   
-  border: 0px;      
-  border-radius: 8px;           
-  pointer-events: none;         
+#graph {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font: 10px sans-serif;
 }
+
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.line_user line {
+    stroke: rgb(255, 0, 0);
+    stroke-width: 2;
+}
+
+.bar text {
+  fill: #fff;
+}
+
 .axis path, .axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
+  
 table#leaderboard tr:nth-child(even) {
     background-color: #ccc;
 }
@@ -52,97 +60,102 @@ table#leaderboard tr:nth-child(odd) {
 
 <script src="{% static "js/d3.min.js" %}"></script>
 <script>
-var margin = {top: 20, right: 10, bottom: 10, left:40},
-    width = 800 - margin.left - margin.right,
-    height = 50 - margin.top - margin.bottom;
+    var formatCount = d3.format(",.0f");
+
+var margin = {top: 40, right: 40, bottom: 40, left: 40},
+width = 800 - margin.left - margin.right,
+height = 400 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
 var formatDate = d3.time.format("%a : %X");
 
 var x = d3.scale.linear()
-          .range([0,width]);
+    .domain([0,1])
+    .range([0,width]);
 
 var final_data;
 d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
-data.forEach(function(d) {
-   d.date = parseDate(d.submission__date);
-   d.f1score = +d.f1score;
-   d.user = d.submission__user__username;
-   d.user_id = d.submission__user__id;
-   d.simu = d.submission__simu__name;
-   d.method = d.submission__methods;
-});
+    var values = data.map(function(d) { return d.f1score; });
 
-var data = d3.nest()
-  .key(function(d) {return d.submission__methods})
-  .entries(data);
+    var values_user = data.filter(function(d) { return d.submission__user__id == {{ userid }} })
+        .map(function(d) { return d.f1score });
 
-data.forEach(function(d) {
-   d.method = d.key;
-});
-final_data = data;
-x.domain([0,1]);
+    x.domain([0,1]);
 
-data.forEach(function(data,i) {
+    var hist_data = d3.layout.histogram()
+        .bins(x.ticks(20))
+    (values);
 
-var row = d3.select("#soft_graph").append("tr");
+    final_data = values_user;
 
-var td_name = row.append("td")
-                 .html(data.key);
+    var y = d3.scale.linear()
+        .domain([0, d3.max(hist_data, function(d) { return d.y;})])
+        .range([height, 0]);
 
-var svg = row.append("td").append("svg") 
-            .attr("width", width + margin.left + margin.right)
-            .attr("height",height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left +"," + margin.top +")");
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
 
-var points = svg.selectAll("circle")
-   .data(data.values)
-   .enter()
-   .append("circle")
+    var svg = d3.select("#graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var pointsAttributes = points
-   .attr("cx", function(d) {return x(d.f1score)})
-   .attr("cy", 0)
-   .attr("r", function(d) {return (user_id == d.user_id ? 10 : 5)})
-   .style("fill-opacity", "0.7")
-   .style("fill", function(d) {return (user_id == d.user_id ? "blue" : "red")});
+    var bar = svg.selectAll(".bar")
+        .data(hist_data)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
-var tooltip = d3.select("#graph").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(hist_data[0].dx) - 1)
+        .attr("height", function(d) { return height - y(d.y); });
 
-pointsAttributes.on("mouseover", function(d) {      
-            tooltip.transition()        
-                .duration(200)      
-                .style("opacity", .9);      
-            tooltip.html("score :" + d.f1score.toFixed(4))  
-                .style("left", (d3.event.pageX) + "px")     
-                .style("top", (d3.event.pageY - 28) + "px");    
-            })                  
-        .on("mouseout", function(d) {       
-            tooltip.transition()        
-                .duration(500)      
-                .style("opacity", 0);   
-            });
-});
+    bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", x(hist_data[0].dx) / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.y); });
 
-// scale
-var first_row = d3.select("#soft_graph").append("tr");
-var name_td = first_row.append("td");
-name_td.html("F1 Score");
-var scale_td = first_row.append("td");
-var xAxis = d3.svg.axis()
-              .scale(x)
-              .tickValues([0.0,0.2,0.4,0.6,0.8,1.0]);
-var scale_svg = scale_td.append("svg")
-                        .attr("class", "axis")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left +"," + margin.top+")")
-                        .call(xAxis);
+    var line = svg.selectAll(".line_user")
+        .data(values_user)
+        .enter()
+        .append("g")
+        .attr("class", "line_user")
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + 0 +")"; });
+
+    line.append("line")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", 0)
+        .attr("y2", height)
+
+    svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(50,30)")
+        .append("line")
+        .attr("class", ".line_user")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", 20)
+        .attr("y2", 0)
+        .append("text")
+        .text("Test");
+
+     svg.append("text")
+     .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+     .attr("transform", "translate("+ (width/2) +","+(height+margin.top-(margin.bottom/3))+")")  // centre below axis
+     .text("F1 score");
+
 
 });
 
@@ -163,9 +176,10 @@ function sortByScore(a, b) {
     return d3.descending(a.values.f1score,b.values.f1score);
 }
 
-var nestedData = d3.nest().key(function(d) { return d.user + " " + d.method })
+var nestedData = d3.nest().key(function(d) { return d.user })
                           .rollup(function(leaves) {
-                              return {"user": leaves[0].user, "method": leaves[0].method, "f1score": d3.max(leaves, function(d) {
+return {"user": leaves[0].user, "method": leaves[0].method,
+"private": leaves[0].submission__simu__private, "f1score": d3.max(leaves, function(d) {
                                   return +d.f1score;
                               })}
                           })
@@ -180,6 +194,8 @@ var td_name = row.append("td").append("b")
                  .html("User");
 var td_soft = row.append("td").append("b")
                  .html("Method");
+var td_envariable = row.append("td").append("b")
+                 .html("EnvVariable");
 var td_res = row.append("td").append("b")
                 .html("F1 score");
 
@@ -191,6 +207,8 @@ var td_name = row.append("td")
                  .html(d.values.user);
 var td_soft = row.append("td")
                  .html(d.values.method);
+var td_soft = row.append("td")
+                 .html(d.values.private.toString());
 var td_res = row.append("td")
                 .html(d.values.f1score);
 
