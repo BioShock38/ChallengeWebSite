@@ -15,12 +15,14 @@ def json_serial(obj):
 
 def index(request):
     if request.user.is_authenticated():
-        l_results = Result.objects.filter(submission__simu__private=False) \
-                                  .filter(submission__user=request.user.id)
+        l_results = Result.objects.filter(submission__user=request.user.id)
         val_results = l_results.values('f1score',
                                        'submission__simu',
                                        'submission__simu__name',
-                                       'submission__date')
+                                       'submission__date',
+                                       'submission__simu__private',
+                                       'submission__with_env_variable',
+                                       'submission__methods')
         context = {'results': l_results,
                    'json_results': json.dumps(list(val_results), default=json_serial)}
         return render(request, 'account/index.html', context)

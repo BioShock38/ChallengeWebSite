@@ -34,8 +34,14 @@ data = jsonObject;
 
 data.forEach(function(d) {
     d.date = parseDate(d.submission__date);
-    d.f1score = +d.f1score;
+    if (d.submission__simu__private) {
+      d.f1score = "private";
+    } else {
+      d.f1score = +d.f1score;
+    }
+    d.methods = d.submission__methods;
     d.simu = d.submission__simu__name;
+    d.env = d.submission__with_env_variable;
 });
 
 var graph = d3.select("#graph");
@@ -44,14 +50,18 @@ var table = graph.select("table");
 var thead = table.append("thead");
 var row = thead.append("tr");
 var date = row.append("th").html("Date");
-var date = row.append("th").html("Challenge");
+var challenge = row.append("th").html("Challenge");
+var methods = row.append("th").html("Method");
+var env = row.append("th").html("Environmental Variable");
 var score = row.append("th").html("F1 Score");
 
 var tbody = table.append("tbody");
 data.forEach(function(d) {
     var row = tbody.append("tr");
     var date = row.append("td").html(formatDate(d.date));
-    var date = row.append("td").html(d.simu);
+    var challenge = row.append("td").html(d.simu);
+    var methods = row.append("td").html(d.methods);
+    var env = row.append("td").html(d.env);
     var score = row.append("td").html(d.f1score);
 });
 
