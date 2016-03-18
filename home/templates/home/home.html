@@ -4,27 +4,16 @@
   <div class="container">
 
     <div class="row cover">
-      {% if request.user.is_authenticated %}
-      <h1>SSMPG summer school</h1>
-      <p class="lead">Welcome to the SSMPG summer school challenge website</p>
-      {% else %}
+
       <div class="col-md-7">
-        <h1>SSMPG summer school</h1>
-        <p class="lead">Welcome to the SSMPG summer school challenge website</p>
+        <h1>Welcome to SSMPG challenge website</h1>
+  <p class="lead">In this website, you can participate to the challenges proposed during the SSMPG summer school and evaluate you ability to perform genome scans for selection.</p>
       </div>
 
-      {% endif %}
     </div>
   </div>
 </div>
 
-<div class="container">
-  <!-- Jumbotron -->
-  <div class="jumbotron">
-    <p class="lead">
-      In this challenge, attendees can download simulated data for the SSMPG challenge and complete the analysis of the data using statistical methods for genome scans of selection (outflank, selestim, pcadapt, lfmm/lea, flk, bayespass, other).
 
-  </div>
-</div>
 
 {% endblock %} {% block fullwidthfooter %} {% endblock fullwidthfooter %}
