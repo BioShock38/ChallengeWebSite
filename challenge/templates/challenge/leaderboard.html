@@ -35,9 +35,13 @@
   shape-rendering: crispEdges;
 }
 
+.bar rect:hover {
+  fill: #2b506e;
+}
+
 .line_user line {
     stroke: rgb(255, 0, 0);
-    stroke-width: 2;
+    stroke-width: 4;
 }
 
 .bar text {
@@ -56,13 +60,31 @@ table#leaderboard tr:nth-child(even) {
 table#leaderboard tr:nth-child(odd) {
     background-color: #fff;
 }
+div.tooltip {
+  position: absolute;	
+  text-align: center;	
+  width: 60px;	
+  height: 28px;		
+  padding: 2px;	
+  font: 8px sans-serif;	
+  background: lightsteelblue;	
+  border: 0px;					
+  border-radius: 8px;
+ /*  pointer-events: none;	This line needs to be removed */
+	
+}
 </style>
 
 <script src="{% static "js/d3.min.js" %}"></script>
 <script>
+var div = d3.select("body")
+	.append("div")
+	.attr("class", "tooltip")
+  .style("opacity", 0);
+
     var formatCount = d3.format(",.0f");
 
-var margin = {top: 40, right: 40, bottom: 40, left: 40},
+var margin = {top: 60, right: 40, bottom: 40, left: 40},
 width = 800 - margin.left - margin.right,
 height = 400 - margin.top - margin.bottom;
 
@@ -133,23 +155,46 @@ d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,da
         .attr("y1", 0)
         .attr("x2", 0)
         .attr("y2", height)
+    	  .on("mouseover", function(d) {		
+            d3.select(this).transition()
+                .duration(100)
+                .style("stroke-width", 7);
+            div.transition()
+				        .duration(100)	
+				        .style("opacity", 0);
+			      div.transition()
+				        .duration(100)	
+				        .style("opacity", .9);	
+			      div	.html(
+				        'Your Score :' + d)
+				        .style("left", (d3.event.pageX) + "px")			 
+				        .style("top", (d3.event.pageY - 28) + "px");
+			  })
+        .on("mouseout", function(d) {
+            d3.select(this).transition()
+                .duration(100)
+                .style("stroke-width", 4);
+        });
 
     svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-    svg.append("g")
+    var legend = d3.select("#graph").select("svg").append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(50,30)")
+        .attr("transform", "translate(50,20)");
+
+    legend.append("g")
+        .attr("class", "line_user")
+        .attr("transform", "translate(60,-4)")
         .append("line")
-        .attr("class", ".line_user")
         .attr("x1", 0)
         .attr("y1", 0)
         .attr("x2", 20)
         .attr("y2", 0)
-        .append("text")
-        .text("Test");
+    legend.append("text")
+        .text("Your score");
 
      svg.append("text")
      .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
