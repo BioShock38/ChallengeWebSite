@@ -11,8 +11,7 @@
 
 <div id="content">
 <div id="graph">
-  <h2 style="text-align: center;"> Leaderboard Graph </h2>
-  <p> Histogram of F1 score </p>
+  <h2 style="text-align: center;"> Histogram of F1 score</h2>
 </div>
 <div id="lead">
   <h2 style="text-align: center;"> Leaderboard Table </h2>
@@ -27,7 +26,11 @@
   width: 800px;
   margin-left: auto;
   margin-right: auto;
-  font: 10px sans-serif;
+  font: 14px sans-serif;
+}
+
+.legend {
+    font: 20px;
 }
 
 .bar rect {
@@ -66,7 +69,7 @@ div.tooltip {
   width: 60px;	
   height: 28px;		
   padding: 2px;	
-  font: 8px sans-serif;	
+  font: 10px sans-serif;	
   background: lightsteelblue;	
   border: 0px;					
   border-radius: 8px;
@@ -84,7 +87,7 @@ var div = d3.select("body")
 
     var formatCount = d3.format(",.0f");
 
-var margin = {top: 60, right: 40, bottom: 40, left: 40},
+var margin = {top: 40, right: 40, bottom: 40, left: 40},
 width = 800 - margin.left - margin.right,
 height = 400 - margin.top - margin.bottom;
 
@@ -155,6 +158,7 @@ d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,da
         .attr("y1", 0)
         .attr("x2", 0)
         .attr("y2", height)
+        .attr("opacity", 0.7)
     	  .on("mouseover", function(d) {		
             d3.select(this).transition()
                 .duration(100)
@@ -187,18 +191,19 @@ d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,da
 
     legend.append("g")
         .attr("class", "line_user")
-        .attr("transform", "translate(60,-4)")
+        .attr("transform", "translate(80,-4)")
         .append("line")
         .attr("x1", 0)
         .attr("y1", 0)
         .attr("x2", 20)
         .attr("y2", 0)
+        .attr("opacity", 0.7)
     legend.append("text")
         .text("Your score");
 
      svg.append("text")
      .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-     .attr("transform", "translate("+ (width/2) +","+(height+margin.top-(margin.bottom/3))+")")  // centre below axis
+     .attr("transform", "translate("+ (width/2) +","+(height+margin.top-(margin.bottom/4))+")")  // centre below axis
      .text("F1 score");
 
 
