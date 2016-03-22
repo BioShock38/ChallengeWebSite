@@ -16,8 +16,6 @@ class SubmitForm(forms.Form):
                                                              conv(simu.private)) for simu in l_simu])
 
     answer = forms.CharField(label = 'List of candidate SNPs', max_length=4000)
-    level = forms.ChoiceField(widget=forms.Select,
-                              choices=Submission.LEVEL_CHOICES)
 
     with_environment_variable = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
