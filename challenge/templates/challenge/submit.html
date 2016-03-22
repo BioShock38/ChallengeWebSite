@@ -12,10 +12,10 @@
 
 <p> Here you can submit your list of candidate SNPs. You have a limited number of submissions, so be careful when submitting your list. </p>
 
-{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+{% if error_message %}<p><strong style="color: red;">{{error_message}}</strong></p>{% endif %}
 
 {% if infosubmission %}<h2 style="text-align: center;">Number of submissions for this dataset: {{infosubmission.0}} </h2>{% endif %}
-{% if res %}<h2 style="text-align: center; color: red;"><strong>You obtain a F1 score of {{res}}</strong></h2>{% endif %}
+{% if res %}<h2 style="text-align: center; color: red;"><strong>{{res}}</strong></h2>{% endif %}
 
 <form action="{% url 'challenge:challenge_submit' challenge.id %}" method="post">
 {% csrf_token %}
@@ -29,12 +29,6 @@
 <p class="fieldDescription"> <em>Insert your list of candidate SNPs, e.g., "1,13,2344,12" </em></p>
 {{ form.answer|bootstrap_horizontal }}
 </div>
-<div class="fieldWrapper">
-{{ form.level.errors }}
-<p class="fieldDescription"> <em>Select your level of expertise. </em></p>
-{{ form.level|bootstrap_horizontal }}
-</div>
-
 <div class="fieldWrapper">
 {{ form.with_environment_variable.errors }}
 <p class="fieldDescription"> <em>Did you use an environment variable? </em></p>

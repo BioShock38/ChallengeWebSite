@@ -49,6 +49,7 @@ def results_challenge(request,challenge_id):
     l_results = Result.objects.filter(submission__challenge=challenge) \
                               .filter(submission__simu__private=False) \
                               .values('f1score','submission__date',
+                                      'submission__simu__private',
                                       'submission__user__username',
                                       'submission__user__id',
                                       'submission__simu',
@@ -143,7 +144,7 @@ def challenge_submit(request,challenge_id):
                                           answer=request.POST['answer'],
                                           date=timezone.now(),
                                           methods=software,
-                                          level=form.cleaned_data['level'],
+                                          level=Submission.BEGINNER,
                                           with_env_variable=form.cleaned_data['with_environment_variable'],
                                           desc_method=form.cleaned_data['method_desc'],
                                           user=request.user)
@@ -183,7 +184,7 @@ def challenge_submit(request,challenge_id):
                                   {'l_simu' : l_simu,
                                    'form': form,
                                    'challenge': challenge,
-                                   'res': str(r.f1score),
+                                   'res': "You obtain a F1 score of " + str(r.f1score),
                                    'infosubmission': [nb_submission+1,maxsubmission]
                                })
             
