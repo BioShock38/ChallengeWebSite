@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% include "challenge/nav.html" with challenge_id=challenge.id %}
+{% include "challenge/nav.html" with challenge_id=challenge.id challenge_name=challenge.name %}
 
 <div id="content">
 <p>{{ challenge.desc|safe }}</p>

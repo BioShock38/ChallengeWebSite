@@ -66,9 +66,9 @@ table#leaderboard tr:nth-child(odd) {
 div.tooltip {
   position: absolute;	
   text-align: center;	
-  width: 60px;	
-  height: 28px;		
-  padding: 2px;	
+  width: 80px;	
+  height: 30px;		
+  padding: 3px;	
   font: 10px sans-serif;	
   background: lightsteelblue;	
   border: 0px;					
@@ -101,10 +101,10 @@ var x = d3.scale.linear()
 var final_data;
 d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,data) {
 
-    var values = data.map(function(d) { return d.f1score; });
+    var values = data.map(function(d) { return d.f1score.toFixed(2); });
 
     var values_user = data.filter(function(d) { return d.submission__user__id == {{ userid }} })
-        .map(function(d) { return d.f1score });
+        .map(function(d) { return d.f1score.toFixed(2) });
 
     x.domain([0,1]);
 
@@ -170,7 +170,7 @@ d3.json("/challenge/{{ challenge.id }}/api/results_challenge", function(error,da
 				        .duration(100)	
 				        .style("opacity", .9);	
 			      div	.html(
-				        'Your Score :' + d)
+				        'Your score:' + d)
 				        .style("left", (d3.event.pageX) + "px")			 
 				        .style("top", (d3.event.pageY - 28) + "px");
 			  })
