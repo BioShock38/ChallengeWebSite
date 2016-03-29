@@ -13,5 +13,5 @@ def helpPage(request):
 
 def creditsPage(request):
     return render_to_response(
-    'home/help.html', RequestContext( request, { 'user': request.user } )
+    'home/credits.html', RequestContext( request, { 'user': request.user } )
     )
