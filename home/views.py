@@ -10,3 +10,8 @@ def helpPage(request):
     return render_to_response(
     'home/help.html', RequestContext( request, { 'user': request.user } )
     )
+
+def creditsPage(request):
+    return render_to_response(
+    'home/credits.html', RequestContext( request, { 'user': request.user } )
+    )

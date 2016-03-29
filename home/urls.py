@@ -5,4 +5,5 @@ import home.views as hv
 urlpatterns =  [
     url(r'^home/$', hv.home, name = 'home'),
     url(r'^help/$', hv.helpPage, name = 'help'),
+    url(r'^credits/$', hv.creditsPage, name = 'credits'),
 ]

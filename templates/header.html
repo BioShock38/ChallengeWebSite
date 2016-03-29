@@ -11,21 +11,20 @@
         <a href="/" class="navbar-brand value-brand">SSMPG challenges</a>
       </div>
       <div class="collapse navbar-collapse" id="header-menu">
-        <ul class="nav navbar-nav">
-          <li><a href="/home/help/">Help</a></li>
-        </ul>
         {% if request.user.is_authenticated %}
-	<ul class="nav navbar-nav">
+        <ul class="nav navbar-nav">
           <li><a href="/challenge/">Challenges</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-	  <li><a href="{% url 'account:index' %}" data-toggle="tooltip" data-placement="bottom" data_container="body" title="History">Welcome '{{ request.user.username }}'</a></li>
+          <li><a href="{% url 'account:index' %}" data-toggle="tooltip" data-placement="bottom" data_container="body" title="History">Welcome '{{ request.user.username }}'</a></li>
           <li><a href="/login/logout/" data-toggle="tooltip" data-placement="bottom" data-container="body" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a></li>
         </ul>
         {% else %}
-          <a href="/login/login/" title="Login" class="btn btn-default navbar-btn navbar-right">Login</a>
-          <a href="/login/register/" title="Register" class="btn btn-primary navbar-btn navbar-right" style="margin-right: 5px;">Register</a>
-        {% endif %}
+        <a href="/login/login/" title="Login" class="btn btn-default navbar-btn navbar-right">Login</a>
+        <a href="/login/register/" title="Register" class="btn btn-primary navbar-btn navbar-right" style="margin-right: 5px;">Register</a> {% endif %}
+        <ul class="nav navbar-nav">
+          <li><a href="/home/help/">Help</a></li>
+        </ul>
       </div>
     </div>
   </nav>
