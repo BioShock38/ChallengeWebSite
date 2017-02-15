@@ -1,5 +1,5 @@
 * Reunion
-** Le <2017-02-14 Mar> 
+** <2017-02-14 Mar> 
    - url: learningpopgen.imag.fr
 
 *** 4 problems
@@ -61,3 +61,25 @@
 *** a pck python or R for submission
 *** ccl of ccl
     popgen
+** <2017-02-15 Mer> 
+   Réunion IMAG, in front of EVE ;D
+   
+   - challenge mediation air_quality/smoke -> baby weight
+*** Ultimate goal
+    [[https://www.kaggle.com/][kaggle]] / [[http://www.ramp.studio/#][RAMP]] like. All challenges in a mess.
+**** a challenge
+     What is ac challenge: 
+     - data
+     - presentation
+     - eval rules
+     - submission form : 
+       Challenge dependant.
+       ---> a file (can be adapted at all challenges)
+**** Points
+     - give ressources (jupyter on server) -> jupyter hub
+     - The method is important !!
+     - share notebooks and same ressources for everyone
+     - Jupyter Hub and challenge website = sepatared task
+
+   
+       
